@@ -1,54 +1,63 @@
 import React, { useState } from "react";
-import { FaXmark } from "react-icons/fa6";
+import { ToDo } from "./todo.jsx";
+import {TaskInput} from "./TaskInput.jsx"
 
 export function ToDoContainer() {
-    const [toDo, setToDo] = useState([]);
+    const [toDos, setToDos] = useState([]);
     const [task, setCurrentTask] = useState("");
-
     const handleDelete = (id) => {
-        setToDo(toDo.filter(item => item.id !== id));
+        setToDos(toDos.filter(item => item.id !== id));
     };
+    const handleEdit = (id, updatedTask) => {
+        const updatedToDos = toDos.map((todo) => {
+            if (todo.id === id) {
+                const updatedToDo = {
+                    task: updatedTask, id 
+                }
+                return updatedToDo;
+            } else {
+                return todo;
+            }
+        })
+        setToDos(updatedToDos);
+    };
+
 
     return (
         <div className="mainCard">
             <h1 className="daTitle">To Do</h1>
-            <ul>
-                <li>
-                    <div className="page">
-                        <input
+            <div className="paperStack">
+                <ul>
+                    <li>
+                        <div className="page">
+                            <TaskInput
+                            task={task}
                             placeholder="what needs to be done?"
-                            type="text"
-                            value={task}
-                            onChange={(event) => {
-                                setCurrentTask(event.target.value);
-                            }}
-                            onKeyDown={(event) => {
-                                const key = event.key;
-                                if (key === 'Enter') {
-                                    const newToDo = {
-                                        task,
-                                        id: toDo.length + 1,
-                                    }
-                                    setToDo([...toDo, newToDo]);
-                                    setCurrentTask("")
+                            setTask={setCurrentTask}
+                            onPressKeyEnter={(task) => {
+                                const newToDo = {
+                                    task,
+                                    id: toDos.length + 1,
                                 }
+                                setToDos([...toDos, newToDo]);
+                                setCurrentTask("")
                             }}
-                        />
-                        {toDo.map((todo) => (
-                            <div className="todo-item" key={todo.id}>
-                                <span>{todo.task}</span>
-                                <FaXmark onClick={() => handleDelete(todo.id)}/>
-                            </div>
-                        ))}
-                    </div>
-                </li>
-            </ul>
-            <div className="daFoot">
-                {toDo.length} {toDo.length === 1 ? 'item' : 'items'} left
+                            />
+                            {toDos.map((todo) => (
+                                <ToDo
+                                    todo={todo}
+                                    handleDelete={handleDelete}
+                                    handleEdit={handleEdit}
+                                    key={todo.id}
+                                />
+                            ))}
+                        </div>
+                    </li>
+                </ul>
+                <span className="daFoot">
+                    {toDos.length} {toDos.length === 1 ? 'item' : 'items'} left
+                </span>
             </div>
         </div>
     )
 }
-
-
-// make it so you can edit items already on the list

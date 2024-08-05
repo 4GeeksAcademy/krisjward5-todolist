@@ -1,26 +1,86 @@
-.mainCard {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-ul {
-    border: 1px solid grey;
-    padding: 1rem;
-    list-style-type: none;
-}
-
-.daTitle {
+]
+body {
+    background-color: white
+  }
+  
+  .mainCard {
+    width: 300px;
+    margin: 20px auto;
+    background-color: white;
+    border: 2px solid black;
+    box-shadow: 5px 5px 0px solid black;
+  }
+  
+  .daTitle {
+    background-color: #ffff99;
+    color: #000;
+    text-align: center;
+    padding: 10px;
+    margin: 0;
+    border-bottom: 2px solid black;
     font-family: fantasy;
-    color: darkcyan;
-    margin-top: 2rem;
-}
+  }
+  
+  .paperStack {
+    padding: 10px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .page {
+    background-color: white;
+    border: 1px solid lightgrey;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid black;
+    font-family: 'Courier New', monospace;
+  }
+  
+  button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+  
+  .daFoot {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background-color: #ffff99;
+    border-top: 2px solid black;
+  }
+  
 
-.daFoot {
-    font-family: cursive;
-}
+  .mainCard, .daTitle, .page, input[type="text"], button {
+    image-rendering: pixelated;
+  }
+  
+  .todo-item {
+    display: flex;
+    justify-content:flex-start;
+    align-items: center;
+    padding: 5px 0;
+    border-top: 3px dashed #bbb;
+  }
+  
+  .daicon {
+    margin: .2rem;
+  }
+  
 
-.todo-item {
-    border: 1px solid grey;
-}
+  
+  
+  
