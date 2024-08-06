@@ -61,6 +61,7 @@ body {
     padding: 10px;
     background-color: #ffff99;
     border-top: 2px solid black;
+    font-family: fantasy;
   }
   
 
@@ -77,10 +78,8 @@ body {
   }
   
   .daicon {
-    margin: .2rem;
+    margin: .3rem;
   }
-  
-
   
   
   

@@ -29,7 +29,7 @@ export function ToDoContainer() {
             <div className="paperStack">
                 <ul>
                     <li>
-                        <div className="page">
+                        <div className="page dapchd">
                             <TaskInput
                             task={task}
                             placeholder="what needs to be done?"
