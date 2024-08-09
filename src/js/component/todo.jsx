@@ -11,11 +11,11 @@ export function ToDo({ todo, handleDelete, handleEdit }) {
     return (
         <div className="todo-item" key={todo.id}>
             {!editMode && (
-                <span>{todo.task}</span>
+                <span>{todo.label}</span>
             )}
             {editMode && (
                 <TaskInput
-                    task={todo.task}
+                    task={todo.label}
                     setTask={(updatedTaskValue) => handleEdit(todo.id, updatedTaskValue)}
                     onBlur={() => setEditMode(false)}
                 />

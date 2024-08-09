@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ToDo } from "./todo.jsx";
 import {TaskInput} from "./TaskInput.jsx"
 
-export function ToDoContainer() {
+export function ToDoContainer(fetchUsers) {
     const [toDos, setToDos] = useState([]);
     const [task, setCurrentTask] = useState("");
     const handleDelete = (id) => {
@@ -21,6 +21,22 @@ export function ToDoContainer() {
         })
         setToDos(updatedToDos);
     };
+    
+    useEffect (()=>{
+        fetch('https://playground.4geeks.com/todo/users/krisward') 
+        .then((response)=>{
+            if(!response){
+                throw new Error("network response is not ok")
+            } 
+            return response.json();
+        })
+        .then((data) => setToDos(data.todos))
+        .catch((error) =>
+            console.error(
+                "there has been a probelem with your fetch"
+            ))
+    }, []);
+
 
 
     return (
@@ -34,21 +50,21 @@ export function ToDoContainer() {
                             task={task}
                             placeholder="what needs to be done?"
                             setTask={setCurrentTask}
-                            onPressKeyEnter={(task) => {
+                            onPressKeyEnter={(label) => {
                                 const newToDo = {
-                                    task,
+                                    label,
                                     id: toDos.length + 1,
                                 }
                                 setToDos([...toDos, newToDo]);
                                 setCurrentTask("")
                             }}
                             />
-                            {toDos.map((todo) => (
+                            {toDos.map((todo, index) => (
                                 <ToDo
                                     todo={todo}
                                     handleDelete={handleDelete}
                                     handleEdit={handleEdit}
-                                    key={todo.id}
+                                    key={index}
                                 />
                             ))}
                         </div>
