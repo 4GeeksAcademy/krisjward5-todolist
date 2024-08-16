@@ -44,6 +44,7 @@ export function ToDoContainer() {
         }
     };
 
+
     const updateTodo = async (todoId, todo) => {
         try {
             const response = await fetch(`https://playground.4geeks.com/todo/todos/${todoId}`, {
@@ -60,9 +61,10 @@ export function ToDoContainer() {
                 throw new Error(`Error updating todo: ${response.statusText}`);
             }
             const responseData = await response.json();
-            return responseData;
+            return responseData; // This should be the updated todo from the server
         } catch (error) {
             console.error("error updating todo:", error)
+            throw error;
         }
     };
 
@@ -93,15 +95,18 @@ export function ToDoContainer() {
         }
     };
 
+
     const handleEdit = async (id, updatedTask) => {
         try {
             const updatedToDo = {
                 label: updatedTask,
                 done: false
             };
-            await updateTodo(id, updatedToDo);
-            const updatedToDos = toDos.map(todo => todo.id === id ? { ...todo, task: updatedTask } : todo);
-            setToDos(updatedToDos);
+            const updatedTodoFromServer = await updateTodo(id, updatedToDo);
+            
+            setToDos(prevToDos => prevToDos.map(todo => 
+                todo.id === id ? { ...todo, label: updatedTodoFromServer.label } : todo
+            ));
         } catch (error) {
             console.error("error updating todo:", error)
         }
