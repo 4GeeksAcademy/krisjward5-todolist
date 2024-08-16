@@ -6,26 +6,26 @@ import { ToDoContainer } from "./todocontainer";
 //create your first component
 const Home = () => {
 
-	// const [toDos, setToDos] = useState([]);
+	const [toDos, setToDos] = useState([]);
 
-	// useEffect(() => {
-	// 	fetchUsers()
-	// }, []);
+	useEffect(() => {
+		fetchUsers()
+	}, []);
 
 
-	// const fetchUsers = () => {
-	// 	fetch('https://playground.4geeks.com/todo/users/krisward')
-	// 		.then((res) => res.json())
-	// 		.then((user) => {
+	const fetchUsers = () => {
+		fetch('https://playground.4geeks.com/todo/users/krisward')
+			.then((res) => res.json())
+			.then((user) => {
 
-	// 			setToDos(user.todo)
-	// 		})
-	// }
+				setToDos(user.todo)
+			})
+	}
 
 
 	return (
 		<ToDoContainer 
-		// fetchUsers={fetchUsers}
+		fetchUsers={fetchUsers}
 		
 		/>
 	);

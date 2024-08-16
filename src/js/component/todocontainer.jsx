@@ -1,42 +1,120 @@
 import React, { useEffect, useState } from "react";
 import { ToDo } from "./todo.jsx";
-import {TaskInput} from "./TaskInput.jsx"
+import { TaskInput } from "./TaskInput.jsx"
 
-export function ToDoContainer(fetchUsers) {
+export function ToDoContainer() {
     const [toDos, setToDos] = useState([]);
     const [task, setCurrentTask] = useState("");
-    const handleDelete = (id) => {
-        setToDos(toDos.filter(item => item.id !== id));
-    };
-    const handleEdit = (id, updatedTask) => {
-        const updatedToDos = toDos.map((todo) => {
-            if (todo.id === id) {
-                const updatedToDo = {
-                    task: updatedTask, id 
+
+    useEffect(() => {
+        const fetchTodos = async () => {
+            try {
+                const response = await fetch('https://playground.4geeks.com/todo/users/krisward');
+                if (!response.ok) {
+                    throw new Error(`Error fetching Todos: ${response.statusText}`);
                 }
-                return updatedToDo;
-            } else {
-                return todo;
+                const data = await response.json();
+                setToDos(data.todos);
+            } catch (error) {
+                console.error("error fetching todos:", error)
             }
-        })
-        setToDos(updatedToDos);
-    };
-    
-    useEffect (()=>{
-        fetch('https://playground.4geeks.com/todo/users/krisward') 
-        .then((response)=>{
-            if(!response){
-                throw new Error("network response is not ok")
-            } 
-            return response.json();
-        })
-        .then((data) => setToDos(data.todos))
-        .catch((error) =>
-            console.error(
-                "there has been a probelem with your fetch"
-            ))
+        };
+        fetchTodos();
     }, []);
 
+    const createTodo = async (userName, todo) => {
+        try {
+            const response = await fetch(`https://playground.4geeks.com/todo/todos/${userName}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    label: todo.label,
+                    is_done: todo.done,
+                }),
+            });
+            if (!response.ok) {
+                throw new Error(`Error creating todo: ${response.statusText}`);
+            }
+            const responseData = await response.json();
+            return responseData;
+        } catch (error) {
+            console.error("error creating todo:", error)
+        }
+    };
+
+    const updateTodo = async (todoId, todo) => {
+        try {
+            const response = await fetch(`https://playground.4geeks.com/todo/todos/${todoId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    label: todo.label,
+                    is_done: todo.done,
+                }),
+            });
+            if (!response.ok) {
+                throw new Error(`Error updating todo: ${response.statusText}`);
+            }
+            const responseData = await response.json();
+            return responseData;
+        } catch (error) {
+            console.error("error updating todo:", error)
+        }
+    };
+
+    const deleteTodo = async (todoId) => {
+        try {
+            const response = await fetch(`https://playground.4geeks.com/todo/todos/${todoId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`Error deleting todo: ${response.statusText}`);
+            }
+            console.log(`deleted todoId: ${todoId}`);
+            return response.ok;
+        } catch (error) {
+            console.error("error deleting todo:", error)
+        }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            await deleteTodo(id);
+            setToDos(toDos.filter(item => item.id !== id));
+        } catch (error) {
+            console.error("error deleting todo:", error)
+        }
+    };
+
+    const handleEdit = async (id, updatedTask) => {
+        try {
+            const updatedToDo = {
+                label: updatedTask,
+                done: false
+            };
+            await updateTodo(id, updatedToDo);
+            const updatedToDos = toDos.map(todo => todo.id === id ? { ...todo, task: updatedTask } : todo);
+            setToDos(updatedToDos);
+        } catch (error) {
+            console.error("error updating todo:", error)
+        }
+    };
+
+    const handleCreate = async (newToDo) => {
+        try {
+            const createdTodo = await createTodo("krisward", newToDo);
+            setToDos([...toDos, createdTodo]);
+        } catch (error) {
+            console.error("error creating todo:", error)
+        }
+    };
 
 
     return (
@@ -47,24 +125,24 @@ export function ToDoContainer(fetchUsers) {
                     <li>
                         <div className="page dapchd">
                             <TaskInput
-                            task={task}
-                            placeholder="what needs to be done?"
-                            setTask={setCurrentTask}
-                            onPressKeyEnter={(label) => {
-                                const newToDo = {
-                                    label,
-                                    id: toDos.length + 1,
-                                }
-                                setToDos([...toDos, newToDo]);
-                                setCurrentTask("")
-                            }}
+                                task={task}
+                                placeholder="what needs to be done?"
+                                setTask={setCurrentTask}
+                                onPressKeyEnter={(label) => {
+                                    const newToDo = {
+                                        label,
+                                        done: false,
+                                    };
+                                    handleCreate(newToDo);
+                                    setCurrentTask("");
+                                }}
                             />
                             {toDos.map((todo, index) => (
                                 <ToDo
+                                    key={index}
                                     todo={todo}
                                     handleDelete={handleDelete}
                                     handleEdit={handleEdit}
-                                    key={index}
                                 />
                             ))}
                         </div>
